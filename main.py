@@ -3,7 +3,7 @@ import os
 import streamlit as st
 from streamlit_option_menu import option_menu
 from web_pages.reply_page import reply_page
-
+from web_pages.post_page import post_page
 if __name__=="__main__":
 
     st.set_page_config(
@@ -11,25 +11,28 @@ if __name__=="__main__":
         initial_sidebar_state="expanded",
         layout="wide",
         menu_items={
-            'About': f"""欢迎体验XX demo！"""
+            'About': f"""欢迎体验！"""
         }
     )
 
     pages={
-            "帖子回复": {
+        "对话": {
             "icon": "chat",
             "func": reply_page,
+        },
+        "帖子回复": {
+            "icon": "agent",
+            "func": post_page,
         }
-
     }
     with st.sidebar:
-        st.image(
-            os.path.join(
-                "img",
-                "logo白.svg"
-            ),
-            use_column_width=True
-        )
+        # st.image(
+        #     os.path.join(
+        #         "img",
+        #         "logo白.svg"
+        #     ),
+        #     use_column_width=True
+        # )
         options=list(pages)
         icons=[x["icon"] for x in pages.values()]
 
