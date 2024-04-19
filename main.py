@@ -21,7 +21,7 @@ if __name__=="__main__":
             "func": reply_page,
         },
         "帖子回复": {
-            "icon": "agent",
+            "icon": "collection",
             "func": post_page,
         }
     }
@@ -42,4 +42,6 @@ if __name__=="__main__":
             icons=icons,
             default_index=default_index,)
     if selected_page=="帖子回复":
+        pages[selected_page]["func"]()
+    elif selected_page=="对话":
         pages[selected_page]["func"]()
