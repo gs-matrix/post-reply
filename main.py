@@ -4,6 +4,7 @@ import streamlit as st
 from streamlit_option_menu import option_menu
 from web_pages.reply_page import reply_page
 from web_pages.post_page import post_page
+from web_pages.make_post_page import make_post_page
 if __name__=="__main__":
 
     st.set_page_config(
@@ -21,8 +22,12 @@ if __name__=="__main__":
             "func": reply_page,
         },
         "帖子回复": {
-            "icon": "collection",
+            "icon": "reply",
             "func": post_page,
+        },
+        "推文生成": {
+            "icon": "chat-square-quote",
+            "func": make_post_page,
         }
     }
     with st.sidebar:
@@ -41,7 +46,4 @@ if __name__=="__main__":
             options=options,
             icons=icons,
             default_index=default_index,)
-    if selected_page=="帖子回复":
-        pages[selected_page]["func"]()
-    elif selected_page=="对话":
-        pages[selected_page]["func"]()
+    pages[selected_page]["func"]()

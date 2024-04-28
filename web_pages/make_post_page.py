@@ -10,11 +10,6 @@ from core.core import corefunc
 api = corefunc()
 HISTORY_LEN=0
 
-character_map={
-    "军人": "soldier",
-    "大专学生": "student",
-    "农民":"farmer"
-}
 chat_box = ChatBox(
     assistant_avatar=os.path.join(
         "img",
@@ -41,11 +36,11 @@ def get_messages_history(history_len: int, content_in_expander: bool = False) ->
 
     return chat_box.filter_history(history_len=history_len, filter=filter)
 
-def post_page():
+def make_post_page():
     with st.sidebar:
         character_mode = st.selectbox(
-            "请选择人设",
-            options=["军人", "大专学生", "农民"],
+            "请选择立场",
+            options=["赞同", "中立", "反对"],
             key = "character_selected",
         )
 
@@ -54,29 +49,29 @@ def post_page():
     if 'text' not in st.session_state:
         st.session_state.text = default_text
 
-    txt = st.text_area("帖子：", value=st.session_state.text, key="input_area")
+    txt = st.text_area("主题：", value=st.session_state.text, key="input_area")
     button_cols = st.columns(18)
-    gen_but=button_cols[0].button("生成回复")
+    gen_but=button_cols[0].button("生成帖子")
     exp1_but=button_cols[1].button("例子1")
     exp2_but=button_cols[2].button("例子2")
     # exp3_but=button_cols[3].button("例子3")
     chat_box.output_messages()
     
     if exp1_but:
-        st.session_state.text = "能源供應不足導致電力緊張局面持續加劇。政府呼籲民眾節約用電，同時加大可再生能源開發力度，以緩解電力緊張問題。#能源危機 #節約用電"
+        st.session_state.text = "美國總統拜登3月23日簽署《2024會計年度綜合撥款法》，確定對台灣提供軍事融資，包含至少3億美元的無償軍援。台灣軍事專家表示，這象徵美國對台灣等盟國的安全承諾，也間接警告北京勿在台海冒進。"
         st.rerun()
     elif exp2_but:
-        st.session_state.text = "餐桌上的蛋類價格飆升，引發民眾擔憂。養雞場表示受到飼料成本上漲和雞隻生產週期的影響。政府正在考慮應對措施。#蛋價上漲 #供應短缺"
+        st.session_state.text = "以色列在加薩的軍事行動，持續引發美國大學校園的示威浪潮。洛杉磯的南加州大學（USC）以安全為由，取消原定於5月10日舉行的一場主畢業禮。除了南加州大學，美國多地的大學也持續有示威。最近一波校園示威始於哥倫比亞大學管理層讓警察進入校內清場，導致過百人被捕。示威者呼籲各大學“從種族滅絕（行為）中撤資”，停止將學校的大筆捐款投資於參與武器製造的公司，以及其它支持以色列加薩戰爭的行業。"
         st.rerun()
 
     if gen_but:
         history = get_messages_history(HISTORY_LEN)
         chat_box.reset_history()
         chat_box.ai_say([
-                Markdown(f"大模型正在分析任务...", in_expander=True, title="人设", state="running"),
+                Markdown(f"大模型正在分析任务...", in_expander=True, title="立场", state="running"),
                 Markdown(f"执行任务中～", in_expander=False, title="执行结果", state="running"),
             ])
-        res=api.character_chat(txt, character_map[character_mode], history)
+        res=api.make_post(txt, character_mode, history)
         text = ""
         for token_res in res:
             try:
