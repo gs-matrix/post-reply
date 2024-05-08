@@ -24,6 +24,7 @@ RUN apt-get update && \
     python3.10 -m pip install streamlit==1.32.2 && \
     python3.10 -m pip install streamlit_chatbox && \
     python3.10 -m pip install streamlit_option_menu && \
+    python3.10 -m pip install pyyaml && \
     #清理不再需要的文件，减少镜像大小
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
@@ -32,12 +33,13 @@ RUN apt-get update && \
 WORKDIR /app
 
 #将 C++源代码添加到容器中
-COPY ./llama.cpp /app
+COPY ./llama.cpp /app/llama.cpp
+COPY ./src /app/src
 
-RUN make
-RUN chmod +x entrypoint.sh
+RUN make -C /app/llama.cpp
+RUN chmod +x /app/src/entry_point.sh
 
 
-ENTRYPOINT [ "app/entry_point.sh" ]
+ENTRYPOINT [ "/app/src/entry_point.sh" ]
 
 CMD ["bash"]
